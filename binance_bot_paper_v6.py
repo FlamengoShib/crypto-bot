@@ -261,8 +261,14 @@ class GestorDiario:
 
 def conectar():
     client = Client(API_KEY, API_SECRET)
-    client.ping()
-    log.info("✅ Conectado à Binance.")
+    try:
+        # Testa conexão buscando o preço do BTC em vez de ping()
+        # compatível com todas as versões do python-binance
+        client.get_symbol_ticker(symbol="BTCUSDT")
+        log.info("✅ Conectado à Binance.")
+    except Exception as e:
+        log.error(f"❌ Erro ao conectar: {e}")
+        raise
     return client
 
 
